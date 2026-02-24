@@ -1,0 +1,66 @@
+<div class="uprn-table-container">
+
+  <!-- ================= FILTER + ACTIONS ================= -->
+  <div class="table-toolbar">
+    <input
+      type="text"
+      placeholder="Filter by UPRN or address..."
+      (input)="filter($any($event.target).value)"
+    />
+    <button (click)="clearAll()">Clear All</button>
+  </div>
+
+  <!-- ================= TABLE ================= -->
+  <table class="uprn-table">
+    <thead>
+      <tr>
+        <th (click)="sort('uprn')">UPRN</th>
+        <th (click)="sort('address')">Address</th>
+        <th (click)="sort('latitude')">Lat</th>
+        <th (click)="sort('longitude')">Lng</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of sortedUprns(); let i = index">
+        <ng-container *ngIf="editIndex() !== i && editIndex() !== -1; else editRowTemplate">
+          <td>{{ row.uprn }}</td>
+          <td>{{ row.address }}</td>
+          <td>{{ row.latitude }}</td>
+          <td>{{ row.longitude }}</td>
+          <td>
+            <button (click)="startEdit(row, i)">Edit</button>
+            <button (click)="delete(row)">Delete</button>
+          </td>
+        </ng-container>
+
+        <!-- ===== EDIT MODE ===== -->
+        <ng-template #editRowTemplate>
+          <td><input type="number" [(ngModel)]="editRow()!.uprn" /></td>
+          <td><input type="text" [(ngModel)]="editRow()!.address" /></td>
+          <td><input type="number" [(ngModel)]="editRow()!.latitude" /></td>
+          <td><input type="number" [(ngModel)]="editRow()!.longitude" /></td>
+          <td>
+            <button *ngIf="editIndex() !== -1" (click)="saveEdit()">Save</button>
+            <button (click)="cancelEdit()">Cancel</button>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ================= ADD NEW ROW ================= -->
+  <div class="add-row-section">
+    <button (click)="startAddNewRow()">+ Add New UPRN</button>
+
+    <div *ngIf="editIndex() === -1" class="new-row-form">
+      <input type="number" placeholder="UPRN" [(ngModel)]="editRow()!.uprn" />
+      <input type="text" placeholder="Address" [(ngModel)]="editRow()!.address" />
+      <input type="number" placeholder="Latitude" [(ngModel)]="editRow()!.latitude" />
+      <input type="number" placeholder="Longitude" [(ngModel)]="editRow()!.longitude" />
+
+      <button (click)="addUprn(editRow()!); cancelEdit()">Add</button>
+      <button (click)="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+</div>

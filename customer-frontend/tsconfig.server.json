@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/server",
+    "module": "commonjs"
+  },
+  "include": [
+    "src/main.server.ts",
+    "src/server.ts",
+    "src/app/app-component.config.server.ts",
+    "src/app/app-component.routes.server.ts"
+  ]
+}

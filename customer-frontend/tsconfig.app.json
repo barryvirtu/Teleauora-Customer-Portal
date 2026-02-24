@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/main.server.ts",
+    "src/server.ts",
+    "src/app/app-component.config.server.ts",
+    "src/app/app-component.config.ts",
+    "src/app/app-component.routes.server.ts",
+    "src/app/pipes/safeurl-pipe.ts",
+    "src/environments/environment.prod.ts"
+  ]
+}

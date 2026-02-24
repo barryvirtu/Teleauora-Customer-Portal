@@ -1,0 +1,50 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.map-container {
+  width: 100%;
+  height: 600px; // Adjust based on your layout
+  background: #f0f0f0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.map-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+
+  .toolbar-btn {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+
+    &.is-active {
+      background: #e7f3ff;
+      border-color: #007bff;
+      color: #007bff;
+    }
+
+    &--primary {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+  }
+
+  .toolbar-sep {
+    width: 1px;
+    height: 20px;
+    background: #eee;
+    margin: 0 8px;
+  }
+}

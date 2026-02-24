@@ -1,0 +1,70 @@
+<div class="content-card">
+  <div class="card-header">
+    <h3 class="card-title">
+      <svg><use href="assets/icons.svg#document"></use></svg>
+      Support Tickets
+    </h3>
+    <div class="action-bar">
+      <input type="text" class="search-input" placeholder="Search customer or title..." [(ngModel)]="filterText" (input)="applyFilter()">
+      <button class="btn btn-primary btn-sm" (click)="toggleNewForm()">+ New Ticket</button>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('id')">ID</th>
+          <th (click)="sortBy('customerName')">Customer</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTickets">
+          <ng-container *ngIf="editingId === t.id; else readRow">
+            <td>{{ t.id }}</td>
+            <td><input class="cell-input" [(ngModel)]="editBuffer.customerName"></td>
+            <td><input class="cell-input" [(ngModel)]="editBuffer.title"></td>
+            <td>
+              <select class="cell-input" [(ngModel)]="editBuffer.status">
+                <option value="OPEN">OPEN</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="RESOLVED">RESOLVED</option>
+              </select>
+            </td>
+            <td>
+              <select class="cell-input" [(ngModel)]="editBuffer.priority">
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+                <option value="CRITICAL">CRITICAL</option>
+              </select>
+            </td>
+            <td class="row-actions">
+              <button class="btn-icon save" (click)="saveEdit(t)"><svg><use href="assets/icons.svg#check"></use></svg></button>
+              <button class="btn-icon cancel" (click)="cancelEdit()"><svg><use href="assets/icons.svg#close"></use></svg></button>
+            </td>
+          </ng-container>
+
+          <ng-template #readRow>
+            <td><span class="id-tag">#{{ t.id }}</span></td>
+            <td>
+              <div class="name-main">{{ t.customerName }}</div>
+              <div class="name-sub">{{ t.customerEmail }}</div>
+            </td>
+            <td class="title-cell">{{ t.title }}</td>
+            <td><span class="badge status" [ngClass]="t.status?.toLowerCase()">{{ t.status }}</span></td>
+            <td><span class="badge priority" [ngClass]="t.priority?.toLowerCase()">{{ t.priority }}</span></td>
+            <td class="row-actions">
+              <button class="btn-icon edit" (click)="startEdit(t)"><svg><use href="assets/icons.svg#edit"></use></svg></button>
+              <button class="btn-icon delete" (click)="deleteTicket(t)"><svg><use href="assets/icons.svg#trash"></use></svg></button>
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

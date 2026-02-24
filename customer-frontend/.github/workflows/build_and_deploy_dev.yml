@@ -1,0 +1,26 @@
+name: Teleauora-Web-Dev-Build
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+jobs:
+
+  Teleauora-Web-Build:
+    name: Teleauora Web Build
+    runs-on: [self-hosted, test]
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: docker build -f Dockerfile -t teleauro-customer-app .
+
+      - name: Stop and remove container
+        continue-on-error: true
+        run: docker stop teleauro-customer-app && docker rm teleauro-customer-app
+
+      - name: Run container
+        run: docker run -d -p 8081:80 --name teleauro-customer-app teleauro-customer-app

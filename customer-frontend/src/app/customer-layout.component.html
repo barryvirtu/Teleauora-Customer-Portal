@@ -1,0 +1,11 @@
+<div class="funnel-wrapper">
+  <div class="funnel-container">
+    <app-funnel-header [currentStep]="currentStep"></app-funnel-header>
+    <app-progress-section
+      [progressPercentage]="progressPercentage"
+      [selectedIndex]="selectedIndex"
+    ></app-progress-section>
+    <app-opportunities-btn></app-opportunities-btn>
+    <router-outlet></router-outlet>
+  </div>
+</div>

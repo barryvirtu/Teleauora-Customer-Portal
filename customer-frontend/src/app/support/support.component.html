@@ -1,0 +1,72 @@
+<h1>Support Tickets</h1>
+
+<div class="support-card">
+
+  <!-- Tickets Table -->
+  <table class="support-table">
+    <thead>
+      <tr>
+        <th>Ticket ID</th>
+        <th>Issue Date</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let t of tickets">
+        <td>{{ t.ticketId }}</td>
+        <td>{{ t.issueDate }}</td>
+        <td>{{ t.category }}</td>
+        <td>
+          <span class="status" [ngClass]="{
+            'status--open': t.status === 'Open',
+            'status--closed': t.status === 'Closed',
+            'status--progress': t.status === 'In Progress'
+          }">
+            {{ t.status }}
+          </span>
+        </td>
+        <td>{{ t.notes }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Speed Test -->
+  <div class="speed-box">
+    <button class="btn-speed" (click)="runSpeedTest()">Run Speed Test</button>
+
+    <div *ngIf="speedTestResult" class="speed-results">
+      <p><strong>Download:</strong> {{ speedTestResult.download }} Mbps</p>
+      <p><strong>Upload:</strong> {{ speedTestResult.upload }} Mbps</p>
+      <p><strong>Ping:</strong> {{ speedTestResult.ping }} ms</p>
+    </div>
+  </div>
+
+  <!-- Create Ticket -->
+  <div class="create-ticket">
+    <h3>Create New Support Ticket</h3>
+
+    <label for="ticket-category">Category</label>
+    <input
+      id="ticket-category"
+      type="text"
+      class="ticket-input"
+      [(ngModel)]="newTicket.category"
+    />
+
+    <label for="ticket-notes">Description</label>
+    <textarea
+      id="ticket-notes"
+      class="ticket-input"
+      rows="3"
+      [(ngModel)]="newTicket.notes"
+    ></textarea>
+
+    <button class="btn-create" (click)="submitTicket()">
+      Submit Ticket
+    </button>
+  </div>
+
+</div>

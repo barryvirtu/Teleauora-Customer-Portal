@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  # Dev frontend (for local/dev testing)
+  frontend-dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: teleauro-frontend-dev
+    ports:
+      - "8086:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NG_CLI_ANALYTICS=false
+      - CI=true
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: >
+      sh -c "npm run start -- --host 0.0.0.0 --port 4200 --disable-host-check --proxy-config proxy.conf.json"
+    stdin_open: true
+    tty: true
+    networks:
+      - teleauro-net
+
+  # Production frontend (for Azure/prod)
+  frontend:
+    profiles: ["prod"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: teleauro-frontend
+    ports:
+      - "8086:80"
+    environment:
+      - NG_CLI_ANALYTICS=false
+      - CI=true
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: >
+      sh -c "npm run start -- --host 0.0.0.0 --port 80 --disable-host-check --proxy-config proxy.conf.json"
+    networks:
+      - bridge   # connect to backend network (do NOT start backends)
+
+# Networks
+networks:
+  teleauro-net:
+    external: true  # dev network
+  bridge:
+    external: true  # existing backend network

@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* --- Page Wrapper --- */
+.customer-details-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  background: #ffffff;
+}
+
+/* --- Title --- */
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #0f172a;
+}
+
+/* --- Fields Layout --- */
+.field {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.field:last-child {
+  border-bottom: none;
+}
+
+.field-label {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.field-value {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.4;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 640px) {
+  .field {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

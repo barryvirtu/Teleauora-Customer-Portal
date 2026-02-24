@@ -1,0 +1,76 @@
+{
+  "name": "teleauro-customer-app",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build teleauro-customer-app",
+    "build:prod": "ng build teleauro-customer-app --configuration=production",
+    "build:dev": "ng build teleauro-customer-app --configuration=development",
+    "watch": "ng build teleauro-customer-app --watch --configuration=development",
+    "test": "ng test",
+    "serve:ssr:teleauro-customer-app": "node dist/teleauro-customer-app/server/server.mjs",
+    "analyze": "ng build teleauro-customer-app --configuration=analyze --stats-json && webpack-bundle-analyzer dist/teleauro-customer-app/stats.json",
+    "lint": "ng lint"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/cdk": "^20.2.1",
+    "@angular/common": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/forms": "^20.2.0",
+    "@angular/material": "^20.2.1",
+    "@angular/platform-browser": "^20.2.0",
+    "@angular/router": "^20.2.0",
+    "@turf/boolean-point-in-polygon": "^7.3.4",
+    "@turf/helpers": "^7.3.4",
+    "@turf/turf": "^7.3.4",
+    "express": "^5.1.0",
+    "file-saver": "^2.0.5",
+    "jwt-decode": "^4.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.2",
+    "leaflet.markercluster": "^1.5.3",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.15.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^20.2.2",
+    "@angular/cli": "^20.2.2",
+    "@angular/compiler-cli": "^20.2.0",
+    "@angular/platform-server": "^20.2.0",
+    "@angular/ssr": "^20.2.1",
+    "@types/express": "^5.0.1",
+    "@types/file-saver": "^2.0.7",
+    "@types/jasmine": "~5.1.0",
+    "@types/leaflet": "^1.9.21",
+    "@types/leaflet-draw": "^1.0.13",
+    "@types/leaflet.markercluster": "^1.5.6",
+    "@types/node": "^20.17.19",
+    "angular-eslint": "20.6.0",
+    "eslint": "^9.39.0",
+    "jasmine-core": "~5.9.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "source-map-explorer": "^2.5.3",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.46.3",
+    "webpack-bundle-analyzer": "^4.10.2"
+  }
+}

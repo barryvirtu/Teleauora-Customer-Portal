@@ -1,0 +1,17 @@
+FROM node:22
+
+WORKDIR /app
+
+COPY package*.json ./
+
+# FIX: Remove @16. Let it install the latest CLI to match your project
+RUN npm install -g @angular/cli
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 4200
+
+# Added --disable-host-check and --poll to ensure it works on Windows
+CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--disable-host-check", "--poll", "2000"]

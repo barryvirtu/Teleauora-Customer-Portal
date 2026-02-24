@@ -1,0 +1,23 @@
+
+
+  <!-- Step Indicators -->
+  <div class="steps-grid">
+    <div class="step-item" *ngFor="let s of steps">
+      <a
+        class="step-circle"
+        [class.active]="currentStep === s.stepNumber"
+        [class.past]="currentStep > s.stepNumber"
+        [class.disabled]="!canNavigateTo(s.stepNumber)"
+        [routerLink]="s.route"
+        (click)="onStepClick(s.stepNumber, $event)"
+        [attr.aria-disabled]="!canNavigateTo(s.stepNumber)"
+        [attr.tabindex]="canNavigateTo(s.stepNumber) ? 0 : -1"
+      >
+        <svg>
+          <use [attr.href]="'assets/icons.svg#' + s.icon"></use>
+        </svg>
+      </a>
+
+      <span class="step-label">{{ s.label }}</span>
+    </div>
+  </div>

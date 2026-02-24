@@ -1,0 +1,58 @@
+<div class="login-container">
+  <img src="assets/Teleauro.png" alt="Telauro Logo" class="logo" />
+
+  <h2>Customer Tool</h2>
+
+  <div class="login-box">
+    <p><strong>Please Enter Your Username</strong></p>
+    <p><strong>and Password</strong></p>
+
+    <!-- Bind form submit to onLogin() -->
+    <form (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <!-- Bind username input -->
+        <input
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Username"
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="form-group">
+        <!-- Bind password input -->
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <div class="forgot-password">
+        <a href="#" (click)="openForgotPassword(); $event.preventDefault()">Forgot Password</a>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="login-button">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+@if (showForgotPassword) {
+  <div class="modal">
+    <div class="modal-content">
+      <h3>Recover Password</h3>
+      <p>Please enter your email address:</p>
+      <input type="email" [(ngModel)]="recoveryEmail" placeholder="Email" autocomplete="email" />
+      <button (click)="submitRecoveryEmail()">Submit</button>
+      @if (recoveryMessage) {
+        <p>{{ recoveryMessage }}</p>
+      }
+      <button (click)="closeModal()">Close</button>
+    </div>
+  </div>
+}
