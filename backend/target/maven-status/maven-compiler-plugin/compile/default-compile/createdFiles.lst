@@ -1,0 +1,9 @@
+com\teleauora\portal\tickets\dto\TicketsCreateRequest$TicketsCreateRequestBuilder.class
+com\teleauora\portal\tickets\TicketsProperties.class
+META-INF\spring-configuration-metadata.json
+com\teleauora\portal\PortalApplication.class
+com\teleauora\portal\tickets\dto\TicketsCreateResponse.class
+com\teleauora\portal\storage\BlobClients.class
+com\teleauora\portal\tickets\dto\TicketsCreateRequest.class
+com\teleauora\portal\tickets\TicketsController.class
+com\teleauora\portal\tickets\TicketsService.class

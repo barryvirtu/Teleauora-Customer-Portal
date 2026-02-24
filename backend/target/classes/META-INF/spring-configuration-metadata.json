@@ -1,0 +1,60 @@
+{
+  "groups": [
+    {
+      "name": "tickets",
+      "type": "com.teleauora.portal.tickets.TicketsProperties",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "tickets.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    },
+    {
+      "name": "tickets.client-id",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    },
+    {
+      "name": "tickets.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    },
+    {
+      "name": "tickets.connect-timeout-ms",
+      "type": "java.lang.Integer",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties",
+      "defaultValue": 5000
+    },
+    {
+      "name": "tickets.password",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    },
+    {
+      "name": "tickets.read-timeout-ms",
+      "type": "java.lang.Integer",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties",
+      "defaultValue": 15000
+    },
+    {
+      "name": "tickets.scope",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties",
+      "defaultValue": "all"
+    },
+    {
+      "name": "tickets.tenant",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    },
+    {
+      "name": "tickets.username",
+      "type": "java.lang.String",
+      "sourceType": "com.teleauora.portal.tickets.TicketsProperties"
+    }
+  ],
+  "hints": []
+}

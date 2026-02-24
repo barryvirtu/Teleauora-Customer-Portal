@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  backend-dev:
+    profiles: ["dev"]
+    container_name: teleauro-backend-dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "19090:8080"
+    environment:
+      SPRING_APPLICATION_NAME: teleauora-portal
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: dev
+
+      # Database (connect by container name)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://datamanagement:5432/teleauora
+      SPRING_DATASOURCE_USERNAME: teleauora
+      SPRING_DATASOURCE_PASSWORD: telepass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: UTC
+      SPRING_SQL_INIT_MODE: always
+      SPRING_SQL_INIT_CONTINUE_ON_ERROR: "true"
+
+      # Tickets (Halo) – pick up from .env
+      TICKETS_TENANT: ${TICKETS_TENANT}
+      TICKETS_BASE_URL: ${TICKETS_BASE_URL}
+      TICKETS_CLIENT_ID: ${TICKETS_CLIENT_ID}
+      TICKETS_CLIENT_SECRET: ${TICKETS_CLIENT_SECRET}
+      TICKETS_USERNAME: ${TICKETS_USERNAME}
+      TICKETS_PASSWORD: ${TICKETS_PASSWORD}
+      TICKETS_SCOPE: ${TICKETS_SCOPE:-all}
+      TICKETS_CONNECT_TIMEOUT_MS: ${TICKETS_CONNECT_TIMEOUT_MS:-5000}
+      TICKETS_READ_TIMEOUT_MS: ${TICKETS_READ_TIMEOUT_MS:-15000}
+
+    networks:
+      - teleauro-net
+
+  backend:
+    profiles: ["prod"]
+    container_name: teleauro-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "19090:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_APPLICATION_NAME: teleauora-portal
+      SERVER_PORT: 8080
+
+      # Production DB (override via .env if not using datamanagement)
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://datamanagement:5432/teleauora}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-teleauora}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-telepass}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: UTC
+      SPRING_SQL_INIT_MODE: never
+      SPRING_SQL_INIT_CONTINUE_ON_ERROR: "false"
+
+      # Tickets (Halo)
+      TICKETS_TENANT: ${TICKETS_TENANT}
+      TICKETS_BASE_URL: ${TICKETS_BASE_URL}
+      TICKETS_CLIENT_ID: ${TICKETS_CLIENT_ID}
+      TICKETS_CLIENT_SECRET: ${TICKETS_CLIENT_SECRET}
+      TICKETS_USERNAME: ${TICKETS_USERNAME:-}
+      TICKETS_PASSWORD: ${TICKETS_PASSWORD:-}
+      TICKETS_SCOPE: ${TICKETS_SCOPE:-all}
+      TICKETS_CONNECT_TIMEOUT_MS: ${TICKETS_CONNECT_TIMEOUT_MS:-5000}
+      TICKETS_READ_TIMEOUT_MS: ${TICKETS_READ_TIMEOUT_MS:-15000}
+
+    networks:
+      - bridge
+
+networks:
+  teleauro-net:
+    external: true
+  bridge:
+    external: true
