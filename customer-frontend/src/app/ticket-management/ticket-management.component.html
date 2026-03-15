@@ -27,7 +27,7 @@
           <ng-container *ngIf="editingId === t.id; else readRow">
             <td>{{ t.id }}</td>
             <td><input class="cell-input" [(ngModel)]="editBuffer.customerName"></td>
-            <td><input class="cell-input" [(ngModel)]="editBuffer.title"></td>
+            <td><input class="cell-input" [(ngModel)]="editBuffer.summary"></td>
             <td>
               <select class="cell-input" [(ngModel)]="editBuffer.status">
                 <option value="OPEN">OPEN</option>
@@ -55,7 +55,7 @@
               <div class="name-main">{{ t.customerName }}</div>
               <div class="name-sub">{{ t.customerEmail }}</div>
             </td>
-            <td class="title-cell">{{ t.title }}</td>
+            <td class="title-cell">{{ t.summary }}</td>
             <td><span class="badge status" [ngClass]="t.status?.toLowerCase()">{{ t.status }}</span></td>
             <td><span class="badge priority" [ngClass]="t.priority?.toLowerCase()">{{ t.priority }}</span></td>
             <td class="row-actions">

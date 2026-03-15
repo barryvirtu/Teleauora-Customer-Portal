@@ -1,70 +1,98 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TicketService, TicketResponse, TicketPayload } from '../services/tickets.service';
 
-// FRONTEND → BACKEND (customer-aware create)
-export interface TicketPayload {
-  summary: string;
-  details: string;
-  priority_id?: number;
-  tickettype_id?: number;
-  team?: string;
-  workflow_id?: number;
-  workflow_step?: number;
-}
+@Component({
+  selector: 'app-support',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './ticket-management.component.html',
+  styleUrls: ['./ticket-management.component.scss']
+})
+export class SupportComponent implements OnInit {
 
-// BACKEND → FRONTEND (Halo response)
-export interface TicketResponse {
-  id: number;
-  ref: string;
-  summary: string;
-  details?: string;
-  priority_id?: number;
-  status?: string;
-}
+  private ticketService = inject(TicketService);
 
-@Injectable({ providedIn: 'root' })
-export class TicketService {
-  private readonly http = inject(HttpClient);
+  tickets: TicketResponse[] = [];
+  filteredTickets: TicketResponse[] = [];
 
-  // Matches backend TicketsCrudController + TicketsCustomerController
-  private readonly base = `${environment.dataApiUrl}/tickets`;
+  filterText = '';
+  editingId: number | null = null;
+  editBuffer: Partial<TicketResponse> = {};
 
-  // CREATE for customer
-  createTicketForCustomer(
-    customerId: number,
-    payload: TicketPayload
-  ): Observable<TicketResponse> {
-    return this.http.post<TicketResponse>(
-      `${this.base}/customer/${customerId}`,
-      payload
+  ngOnInit(): void {
+    this.loadTickets();
+  }
+
+  /** Load all tickets for logged‑in customer */
+  private loadTickets(): void {
+    this.ticketService.getCustomerTickets().subscribe({
+      next: data => {
+        this.tickets = data;
+        this.filteredTickets = data;
+      },
+      error: err => {
+        console.error('Failed to load tickets', err);
+        this.tickets = [];
+        this.filteredTickets = [];
+      }
+    });
+  }
+
+  /** Filtering */
+  applyFilter(): void {
+    const text = this.filterText.toLowerCase();
+    this.filteredTickets = this.tickets.filter(t =>
+      t.customerName?.toLowerCase().includes(text) ||
+      t.summary?.toLowerCase().includes(text)
     );
   }
 
-  // READ ALL
-  getAllTickets(): Observable<TicketResponse[]> {
-    return this.http.get<TicketResponse[]>(`${this.base}`);
-  }
-
-  // READ ONE
-  getTicket(id: number): Observable<TicketResponse> {
-    return this.http.get<TicketResponse>(`${this.base}/${id}`);
-  }
-
-  // UPDATE
-  updateTicket(
-    id: number,
-    changes: TicketPayload
-  ): Observable<TicketResponse> {
-    return this.http.put<TicketResponse>(
-      `${this.base}/${id}`,
-      changes
+  /** Sorting */
+  sortBy(field: keyof TicketResponse): void {
+    this.filteredTickets = [...this.filteredTickets].sort((a, b) =>
+      (a[field] ?? '').toString().localeCompare((b[field] ?? '').toString())
     );
   }
 
-  // DELETE / CLOSE
-  deleteTicket(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${id}`);
+  /** Editing */
+  startEdit(ticket: TicketResponse): void {
+    this.editingId = ticket.id;
+    this.editBuffer = { ...ticket };
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+    this.editBuffer = {};
+  }
+
+  saveEdit(ticket: TicketResponse): void {
+    const changes: TicketPayload = {
+      summary: this.editBuffer.summary ?? ticket.summary,
+      details: this.editBuffer.details ?? ticket.details,
+      priority_id: this.editBuffer.priority_id ?? ticket.priority_id
+    };
+
+    this.ticketService.updateTicket(ticket.id, changes).subscribe({
+      next: updated => {
+        Object.assign(ticket, updated);
+        this.cancelEdit();
+      }
+    });
+  }
+
+  /** Delete */
+  deleteTicket(ticket: TicketResponse): void {
+    this.ticketService.deleteTicket(ticket.id).subscribe({
+      next: () => {
+        this.tickets = this.tickets.filter(t => t.id !== ticket.id);
+        this.filteredTickets = this.filteredTickets.filter(t => t.id !== ticket.id);
+      }
+    });
+  }
+
+  toggleNewForm(): void {
+    // existing logic for showing the new ticket form
   }
 }

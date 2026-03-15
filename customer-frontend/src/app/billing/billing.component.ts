@@ -6,7 +6,8 @@ import {
   BillingDataService,
   ContractItem,
   ProjectFinancials,
-  BillingCustomerDetails
+  BillingCustomerDetails,
+  BillingHistoryItem
 } from '../services/billing-data-service';
 
 @Component({
@@ -24,12 +25,26 @@ export class BillingComponent implements OnInit {
   customer?: BillingCustomerDetails;
   contracts: ContractItem[] = [];
   projects: ProjectFinancials[] = [];
+  billingHistory: BillingHistoryItem[] = [];
 
   ngOnInit(): void {
-    this.loadCustomer();
-    this.loadContracts();
-    this.loadFinancials();
+    this.loadBillingData();
   }
+
+  private loadBillingData(): void {
+  this.billingDataService.getBillingData().subscribe({
+    next: data => {
+      this.customer = data.customer;
+      this.contracts = data.contracts;
+      this.projects = data.financials;
+      this.billingHistory = data.history;
+    },
+    error: () => {
+      console.error('Failed to load billing data');
+    }
+  });
+}
+
 
   /** Load customer billing info */
   private loadCustomer(): void {
@@ -65,6 +80,30 @@ export class BillingComponent implements OnInit {
         ];
       }
     });
+  }
+
+  /** Load billing history */
+  private loadBillingHistory(): void {
+    this.billingDataService.getBillingHistory().subscribe({
+      next: items => this.billingHistory = items,
+      error: () => {
+        // fallback example data
+        this.billingHistory = [
+          {
+            issueDate: '2026-01-01',
+            amountDue: 34.99,
+            dueDate: '2026-01-15',
+            paid: true,
+            pdfUrl: '/assets/sample.pdf'
+          }
+        ];
+      }
+    });
+  }
+
+  /** PDF download handler */
+  downloadPdf(url: string): void {
+    window.open(url, '_blank');
   }
 
   /** Summary calculations */

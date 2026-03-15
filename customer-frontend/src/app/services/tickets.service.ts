@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// -------- Request payload for creating/updating tickets --------
 export interface TicketPayload {
   summary: string;
-  details: string;
+  details?: string;   // <-- make optional
   priority_id?: number;
   tickettype_id?: number;
   team?: string;
@@ -14,7 +13,7 @@ export interface TicketPayload {
   workflow_step?: number;
 }
 
-// -------- Response from backend/Halo --------
+
 export interface TicketResponse {
   id: number;
   ref: string;
@@ -22,65 +21,56 @@ export interface TicketResponse {
   details?: string;
   priority_id?: number;
   status?: string;
+  customerName?: string;
+  customerEmail?: string;
+  priority?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class TicketService {
   private readonly http = inject(HttpClient);
-
-  // ✔ Your backend endpoint prefix
   private readonly base = `${environment.dataApiUrl}/tickets`;
 
-  // ----------------------------------------------------------------
-  // CREATE — Creates a Halo ticket for a customer
-  // POST /api/data/tickets/customer/{customerId}
-  // ----------------------------------------------------------------
-  createTicketForCustomer(
-    customerId: number,
-    payload: TicketPayload
-  ): Observable<TicketResponse> {
+  private getAuthHeaders() {
+    const token = localStorage.getItem('jwt');
+    const username = localStorage.getItem('username');
+
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'X-Username': username ?? ''
+      }
+    };
+  }
+
+  /** Unified endpoint — get all tickets for logged‑in customer */
+  getCustomerTickets(): Observable<TicketResponse[]> {
+    return this.http.get<TicketResponse[]>(
+      `${this.base}/customer/all`,
+      this.getAuthHeaders()
+    );
+  }
+
+  createTicketForCustomer(customerId: number, payload: TicketPayload): Observable<TicketResponse> {
     return this.http.post<TicketResponse>(
       `${this.base}/customer/${customerId}`,
-      payload
+      payload,
+      this.getAuthHeaders()
     );
   }
 
-  // ----------------------------------------------------------------
-  // READ ALL — GET all tickets FROM HALO
-  // GET /api/data/tickets
-  // ----------------------------------------------------------------
-  getAllTickets(): Observable<TicketResponse[]> {
-    return this.http.get<TicketResponse[]>(`${this.base}`);
-  }
-
-  // ----------------------------------------------------------------
-  // READ ONE — GET halo ticket by ID
-  // GET /api/data/tickets/{ticketId}
-  // ----------------------------------------------------------------
-  getTicket(ticketId: number): Observable<TicketResponse> {
-    return this.http.get<TicketResponse>(`${this.base}/${ticketId}`);
-  }
-
-  // ----------------------------------------------------------------
-  // UPDATE — Update Halo ticket
-  // PUT /api/data/tickets/{ticketId}
-  // ----------------------------------------------------------------
-  updateTicket(
-    ticketId: number,
-    changes: TicketPayload
-  ): Observable<TicketResponse> {
+  updateTicket(id: number, changes: TicketPayload): Observable<TicketResponse> {
     return this.http.put<TicketResponse>(
-      `${this.base}/${ticketId}`,
-      changes
+      `${this.base}/${id}`,
+      changes,
+      this.getAuthHeaders()
     );
   }
 
-  // ----------------------------------------------------------------
-  // DELETE / CLOSE TICKET (depends on Halo tenant permissions)
-  // DELETE /api/data/tickets/{ticketId}
-  // ----------------------------------------------------------------
-  deleteTicket(ticketId: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${ticketId}`);
+  deleteTicket(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.base}/${id}`,
+      this.getAuthHeaders()
+    );
   }
 }
-

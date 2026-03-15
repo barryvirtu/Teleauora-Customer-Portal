@@ -1,3 +1,4 @@
+// src/app/services/auth.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -20,8 +21,16 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private authBase = inject(AUTH_API_BASE);
-  private readonly TOKEN_KEY = 'jwtToken';
 
+  private readonly TOKEN_KEY = 'jwtToken';
+  private readonly USERNAME_KEY = 'auth_username';
+
+  // 🔁 Use sessionStorage so a hard refresh/new tab kills the session
+  private storage: Storage = sessionStorage;
+
+  /**
+   * Logs in and persists both the JWT and the username used to log in.
+   */
   login(username: string, password: string): Observable<boolean> {
     const url = `${this.authBase}/login`;
     const body = { username, password, app: 'Customer-app' };
@@ -30,7 +39,10 @@ export class AuthService {
 
     return this.http.post<LoginResponse>(url, body).pipe(
       tap(res => {
-        if (res.token) localStorage.setItem(this.TOKEN_KEY, res.token);
+        if (res.token) {
+          this.storage.setItem(this.TOKEN_KEY, res.token);
+          this.storage.setItem(this.USERNAME_KEY, username);
+        }
       }),
       map(res => !!res.token),
       catchError(err => {
@@ -40,13 +52,20 @@ export class AuthService {
     );
   }
 
+  /**
+   * Clears token and username, then navigates to /login.
+   */
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    this.storage.removeItem(this.TOKEN_KEY);
+    this.storage.removeItem(this.USERNAME_KEY);
     this.router.navigate(['/login']);
   }
 
+  /**
+   * Checks if a valid (non-expired) token exists.
+   */
   isLoggedIn(): boolean {
-    const token = localStorage.getItem(this.TOKEN_KEY);
+    const token = this.storage.getItem(this.TOKEN_KEY);
     if (!token) return false;
 
     try {
@@ -64,7 +83,17 @@ export class AuthService {
     }
   }
 
+  /**
+   * Returns the raw JWT from storage.
+   */
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.storage.getItem(this.TOKEN_KEY);
+  }
+
+  /**
+   * Returns the username that was persisted at login time.
+   */
+  getUsername(): string | null {
+    return this.storage.getItem(this.USERNAME_KEY);
   }
 }
