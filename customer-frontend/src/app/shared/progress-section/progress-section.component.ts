@@ -25,7 +25,7 @@ export class ProgressSectionComponent {
   public readonly steps: StepDef[] = [
     { stepNumber: 1, label: 'Customer Details',   icon: 'geo-marker', route: '/customer-management' },
     { stepNumber: 2, label: 'Billing Information',     icon: 'package',    route: '/billing' },
-    { stepNumber: 3, label: 'Support',     icon: 'package',    route: '/support' },
+    { stepNumber: 3, label: 'Support',     icon: 'package',    route: '/ticket-management' },
   ];
 
   /** Safe percentage: clamps to 0..100 */

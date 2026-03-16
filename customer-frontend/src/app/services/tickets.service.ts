@@ -5,14 +5,13 @@ import { environment } from '../../environments/environment';
 
 export interface TicketPayload {
   summary: string;
-  details?: string;   // <-- make optional
+  details?: string;
   priority_id?: number;
   tickettype_id?: number;
   team?: string;
   workflow_id?: number;
   workflow_step?: number;
 }
-
 
 export interface TicketResponse {
   id: number;
@@ -31,46 +30,20 @@ export class TicketService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.dataApiUrl}/tickets`;
 
-  private getAuthHeaders() {
-    const token = localStorage.getItem('jwt');
-    const username = localStorage.getItem('username');
-
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'X-Username': username ?? ''
-      }
-    };
-  }
-
-  /** Unified endpoint — get all tickets for logged‑in customer */
+  /** Get all tickets for the logged‑in customer */
   getCustomerTickets(): Observable<TicketResponse[]> {
-    return this.http.get<TicketResponse[]>(
-      `${this.base}/customer/all`,
-      this.getAuthHeaders()
-    );
+    return this.http.get<TicketResponse[]>(`${this.base}/customer/all`);
   }
 
   createTicketForCustomer(customerId: number, payload: TicketPayload): Observable<TicketResponse> {
-    return this.http.post<TicketResponse>(
-      `${this.base}/customer/${customerId}`,
-      payload,
-      this.getAuthHeaders()
-    );
+    return this.http.post<TicketResponse>(`${this.base}/customer/${customerId}`, payload);
   }
 
   updateTicket(id: number, changes: TicketPayload): Observable<TicketResponse> {
-    return this.http.put<TicketResponse>(
-      `${this.base}/${id}`,
-      changes,
-      this.getAuthHeaders()
-    );
+    return this.http.put<TicketResponse>(`${this.base}/${id}`, changes);
   }
 
   deleteTicket(id: number): Observable<void> {
-    return this.http.delete<void>(
-      `${this.base}/${id}`,
-      this.getAuthHeaders()
-    );
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 }

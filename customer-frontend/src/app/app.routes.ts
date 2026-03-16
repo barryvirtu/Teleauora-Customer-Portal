@@ -36,12 +36,12 @@ export const routes: Routes = [
             .then(m => m.BillingComponent)   // <-- FIXED HERE
       },
 
-      // SUPPORT
+      // TICKET MANAGEMENT
       {
-        path: 'support',
+        path: 'ticket-management',
         loadComponent: () =>
-          import('./support/support.component')
-            .then(m => m.SupportComponent)
+          import('./ticket-management/ticket-management.component')
+            .then(m => m.TicketManagementComponent)
       }
     ]
   },

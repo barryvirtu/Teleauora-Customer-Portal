@@ -10,7 +10,7 @@ import { TicketService, TicketResponse, TicketPayload } from '../services/ticket
   templateUrl: './ticket-management.component.html',
   styleUrls: ['./ticket-management.component.scss']
 })
-export class SupportComponent implements OnInit {
+export class TicketManagementComponent implements OnInit {
 
   private ticketService = inject(TicketService);
 
@@ -22,6 +22,7 @@ export class SupportComponent implements OnInit {
   editBuffer: Partial<TicketResponse> = {};
 
   ngOnInit(): void {
+    console.log('[TicketManagementComponent] ngOnInit fired')
     this.loadTickets();
   }
 
